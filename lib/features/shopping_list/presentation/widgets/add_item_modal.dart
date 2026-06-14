@@ -395,21 +395,36 @@ class _AddItemModalState extends State<AddItemModal> {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: ModalRateInput(
-                controller: _flatQtyController,
-                hint: AppStrings.listQty,
-                onChanged: (_) => setState(() {}),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ModalSectionLabel(label: AppStrings.modalItemQuantity),
+                  const SizedBox(height: AppDimensions.paddingXS),
+                  ModalRateInput(
+                    controller: _flatQtyController,
+                    hint: AppStrings.listQty,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: AppDimensions.paddingM),
             Expanded(
-              child: ModalRateInput(
-                controller: _flatAmountController,
-                hint: AppStrings.historyTotal,
-                prefix: '₹ ',
-                onChanged: (_) => setState(() {}),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ModalSectionLabel(label: AppStrings.modalItemRate),
+                  const SizedBox(height: AppDimensions.paddingXS),
+                  ModalRateInput(
+                    controller: _flatAmountController,
+                    hint: AppStrings.historyTotal,
+                    prefix: '₹ ',
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ],
               ),
             ),
           ],
@@ -519,7 +534,7 @@ class _AddItemModalState extends State<AddItemModal> {
                 ),
                 const SizedBox(width: 8),
                 SizedBox(
-                  width: 38,
+                  width: 55,
                   child: ModalRateInput(
                     controller: _baseQtyController,
                     hint: '1',

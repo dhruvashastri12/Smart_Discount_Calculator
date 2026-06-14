@@ -2,7 +2,7 @@
 /// Supports internationalization and ensures text consistency.
 class AppStrings {
   // App General
-  static const String appName = "Stitch";
+  static const String appName = "Smart Discount Calculator";
 
   // Navigation Tabs
   static const String navCalc = "CALC";
@@ -13,15 +13,13 @@ class AppStrings {
   // Discount Calculator
   static const String calcTitle = "DISCOUNT CALCULATOR";
   static const String calcOriginalPrice = "ORIGINAL PRICE";
-  static const String calcDiscountPercent = "DISCOUNT %";
+  static const String calcDiscountPercent = "DISCOUNT AMOUNT";
   static const String calcFinalPrice = "FINAL PRICE";
   static const String calcSavings = "YOU SAVE";
   static const String calcPercentSymbol = "%";
-  static const String calcRupeeSymbol = "₹";
+  static const String calcRupeeSymbol = " ₹ ";
   static const String calcPercentBtn = "PERCENT %";
   static const String calcFlatBtn = "FLAT ₹";
-
-
 
   static const String calcSavedLabel = "SAVED ";
 
@@ -38,10 +36,12 @@ class AppStrings {
   static const String listAddToList = "Add to Shopping";
   static const String listUpdate = "Update Item";
   static const String listEditItem = "EDIT ITEM";
-  static const String listDeleteConfirmTitle = "Are you sure to delete this item?";
+  static const String listDeleteConfirmTitle =
+      "Are you sure to delete this item?";
   static const String listDeleteConfirmMsg = "Deleted items can't be reverted.";
   static const String listDeleteFromHistoryTitle = "Delete from history?";
-  static const String listDeleteFromHistoryMsg = "Do you also want to remove this item from your past history?";
+  static const String listDeleteFromHistoryMsg =
+      "Do you also want to remove this item from your past history?";
   static const String listBtnYesDelete = "Yes, Delete";
   static const String listBtnKeepIt = "Keep It";
   static const String listCancel = "Cancel";
@@ -56,7 +56,18 @@ class AppStrings {
 
   // Item Units
   static const List<String> unitOptions = [
-    'Select Unit', 'piece', 'unit', 'kg', 'g', 'litre', 'ml', 'metre', 'cm', 'pack', 'box', 'dozen'
+    'Select Unit',
+    'piece',
+    'unit',
+    'kg',
+    'g',
+    'litre',
+    'ml',
+    'metre',
+    'cm',
+    'pack',
+    'box',
+    'dozen',
   ];
 
   // History
@@ -70,23 +81,27 @@ class AppStrings {
   // Conversion
   static const String convTitle = "CONVERSION";
   static const String convComingSoon = "Coming Soon";
-  static const String convFlavorText = "We are working on powerful conversion tools for you.";
+  static const String convFlavorText =
+      "We are working on powerful conversion tools for you.";
 
   // Scan
   static const String scanAlignPrice = "Align price inside the box";
   static const String scanGallery = "Gallery";
   static const String scanFlash = "Flash";
-  static const String scanNoPriceFound = "No price found. Try again or select manually.";
+  static const String scanNoPriceFound =
+      "No price found. Try again or select manually.";
   static const String scanFailed = "Scanning failed";
   static const String scanNoCamera = "No camera found on this device.";
-  static const String scanPermissionDenied = "Camera permission denied. Please enable it in settings.";
+  static const String scanPermissionDenied =
+      "Camera permission denied. Please enable it in settings.";
   static const String scanGalleryFailed = "Gallery access failed";
 
   // Validation Messages
   static const String errorEnterItemName = "Enter item name";
   static const String errorEnterPrice = "Enter valid price";
   static const String errorDiscountPercentLimit = "Discount % must be < 100";
-  static const String errorDiscountAmountLimit = "Discount must be < Total Price";
+  static const String errorDiscountAmountLimit =
+      "Discount must be < Total Price";
   static const String errorPercentDigits = "Max 2 digits for %";
 
   // Splash
@@ -127,7 +142,8 @@ class AppStrings {
   static const String summarySpendOver = "Spend over ₹";
   static const String summaryGet = " get ";
   static const String summaryOff = "% OFF";
-  static const String summaryAppliedGlobally = "Applied globally on the final subtotal.";
+  static const String summaryAppliedGlobally =
+      "Applied globally on the final subtotal.";
   static const String summaryReturnToList = "RETURN TO SHOPPING";
 
   // List Additional
@@ -174,13 +190,18 @@ class AppStrings {
   static const String modalAddItem = "ADD ITEM";
   static const String modalBtnUpdate = "Update Item";
   static const String modalBtnAdd = "＋ Add Item";
+  static const String modalItemQuantity = "ITEM QUANTITY";
+  static const String modalItemRate = "ITEM RATE";
 
   // Dialogs Additional
   static const String dialogConfirmDelete = "Confirm Delete";
-  static const String dialogDeleteMsg = "Are you sure you want to delete this item?";
-  static const String dialogDeleteWarning = "Deleted entries cant be retrived back.";
+  static const String dialogDeleteMsg =
+      "Are you sure you want to delete this item?";
+  static const String dialogDeleteWarning =
+      "Deleted entries cant be retrived back.";
   static const String dialogDeleteHistoryTitle = "Delete from History?";
-  static const String dialogDeleteHistoryMsg = "Do you also want to delete the entry from History tab?";
+  static const String dialogDeleteHistoryMsg =
+      "Do you also want to delete the entry from History tab?";
 
   // Date Formats (templates)
   static const String formatFullDayDate = "EEEE, MMM d";
@@ -193,4 +214,3 @@ class AppStrings {
   static const String keywordWater = "water";
   static const String keywordBread = "bread";
 }
-

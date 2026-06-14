@@ -132,7 +132,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            _buildAllTimeSummaryCard(isDark),
+            _buildAllTimeSummaryCard(isDark, history),
             Expanded(
               child: monthlyHistory.isEmpty
                   ? _buildEmptyHistory()
@@ -144,7 +144,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Widget _buildAllTimeSummaryCard(bool isDark) {
+  Widget _buildAllTimeSummaryCard(bool isDark, Map<DateTime, List<CartItem>> history) {
+    // Compute totals from filtered history (excludes today)
+    double historyExpense = 0;
+    double historySavings = 0;
+    history.forEach((date, items) {
+      for (var item in items) {
+        historyExpense += item.itemAfterVendorDiscount;
+        historySavings += item.totalSavings;
+      }
+    });
+
     return Container(
       margin: const EdgeInsets.fromLTRB(
         AppDimensions.paddingL,
@@ -196,7 +206,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   ),
                   Text(
-                    '₹${dataService.allTimeExpense.toStringAsFixed(0)}',
+                    '₹${historyExpense.toStringAsFixed(0)}',
                     style: TextStyle(
                       fontFamily: 'JetBrainsMono',
                       fontSize: AppDimensions.fontTitleXL,
@@ -219,7 +229,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   ),
                   Text(
-                    '₹${dataService.allTimeSavings.toStringAsFixed(0)}',
+                    '₹${historySavings.toStringAsFixed(0)}',
                     style: TextStyle(
                       fontFamily: 'JetBrainsMono',
                       fontSize: AppDimensions.fontTitleXL,
