@@ -186,18 +186,59 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 3,
-              childAspectRatio: 1.5,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
+            child: Column(
               children: [
-                for (var i = 1; i <= 9; i++) _keyButton(i.toString(), isDark),
-                _keyButton("AC", isDark, isAction: true),
-                _keyButton("0", isDark),
-                _keyButton("backspace", isDark, isIcon: true),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _keyButton("1", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("2", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("3", isDark)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _keyButton("4", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("5", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("6", isDark)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _keyButton("7", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("8", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("9", isDark)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _keyButton("AC", isDark, isAction: true)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("0", isDark)),
+                      const SizedBox(width: 8),
+                      Expanded(child: _keyButton("backspace", isDark, isIcon: true)),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -224,12 +265,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             ),
             child: Row(
               children: [
-                if (unitPrefix) Text(unit, style: TextStyle(fontFamily: 'JetBrainsMono', color: AppColors.neutralText, fontSize: 16)),
+                if (unitPrefix) ...[
+                  Text(unit.trim(), style: TextStyle(fontFamily: 'JetBrainsMono', color: AppColors.neutralText, fontSize: 16)),
+                  const SizedBox(width: 4),
+                ],
                 Expanded(
-                  child: Text(value, style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: 20, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(value, style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: 20, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
+                      ),
+                      if (active) ...[const SizedBox(width: 4), const _BlinkingCursor()],
+                    ],
+                  ),
                 ),
-                if (!unitPrefix) Text(unit, style: TextStyle(fontFamily: 'JetBrainsMono', color: AppColors.neutralText, fontSize: 16)),
-                if (active) ...[const SizedBox(width: 4), _cursor()],
+                if (!unitPrefix) ...[
+                  const SizedBox(width: 4),
+                  Text(unit.trim(), style: TextStyle(fontFamily: 'JetBrainsMono', color: AppColors.neutralText, fontSize: 16)),
+                ],
               ],
             ),
           ),
@@ -238,9 +291,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  Widget _cursor() {
-    return Container(width: 2, height: 20, color: AppColors.primaryGreen);
-  }
+
 
   Widget _toggleButton(String text, bool active, bool isDark, VoidCallback onTap) {
     return Expanded(
@@ -272,6 +323,37 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             : Text(label, style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: isAction ? 16 : 24, fontWeight: FontWeight.bold, color: label == "AC" ? AppColors.error : (isDark ? Colors.white : AppColors.textDark))),
         ),
       ),
+    );
+  }
+}
+
+class _BlinkingCursor extends StatefulWidget {
+  const _BlinkingCursor();
+
+  @override
+  State<_BlinkingCursor> createState() => _BlinkingCursorState();
+}
+
+class _BlinkingCursorState extends State<_BlinkingCursor> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500))..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _controller,
+      child: Container(width: 2, height: 20, color: AppColors.primaryGreen),
     );
   }
 }
