@@ -71,20 +71,15 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
-        child: AddItemModal(
-          editItem: editItem,
-          onItemAdded: (item) {
-            if (editItem != null) {
-              dataService.updateItem(item);
-            } else {
-              dataService.addItem(item);
-            }
-          },
-        ),
+      builder: (context) => AddItemModal(
+        editItem: editItem,
+        onItemAdded: (item) {
+          if (editItem != null) {
+            dataService.updateItem(item);
+          } else {
+            dataService.addItem(item);
+          }
+        },
       ),
     );
   }
@@ -292,25 +287,45 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   }
 
   Widget _buildEmptyState() {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.shopping_cart_outlined,
-            size: 80,
-            color: Colors.grey.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: AppDimensions.paddingL),
-          Text(
-            AppStrings.listEmptyMsg,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: AppDimensions.fontTitleS,
-              color: Colors.grey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingXXL,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.shopping_cart_outlined,
+              size: 72,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.12)
+                  : Colors.grey.withValues(alpha: 0.25),
             ),
-          ),
-        ],
+            const SizedBox(height: AppDimensions.paddingXL),
+            Text(
+              AppStrings.listEmptyMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: AppDimensions.fontTitleS,
+                fontWeight: FontWeight.w600,
+                color: AppColors.neutralText,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingM),
+            Text(
+              'Tap the + button to add your first item.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: AppDimensions.fontXXL,
+                color: AppColors.neutralText.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -75,16 +75,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
-        child: AddItemModal(
-          editItem: item,
-          onItemAdded: (updated) {
-            dataService.updateItem(updated);
-          },
-        ),
+      builder: (context) => AddItemModal(
+        editItem: item,
+        onItemAdded: (updated) {
+          dataService.updateItem(updated);
+        },
       ),
     );
   }
@@ -430,25 +425,45 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildEmptyHistory() {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.history_toggle_off,
-            size: 60,
-            color: Colors.grey.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: AppDimensions.paddingL),
-          Text(
-            AppStrings.historyEmptyMsg,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: AppDimensions.fontS + 1,
-              color: AppColors.neutralText,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingXXL,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.history_toggle_off_outlined,
+              size: 72,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.12)
+                  : Colors.grey.withValues(alpha: 0.25),
             ),
-          ),
-        ],
+            const SizedBox(height: AppDimensions.paddingXL),
+            Text(
+              AppStrings.historyEmptyMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: AppDimensions.fontTitleS,
+                fontWeight: FontWeight.w600,
+                color: AppColors.neutralText,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingM),
+            Text(
+              'Your past shopping sessions will appear here.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: AppDimensions.fontXXL,
+                color: AppColors.neutralText.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

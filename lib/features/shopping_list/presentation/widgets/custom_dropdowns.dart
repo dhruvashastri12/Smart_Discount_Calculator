@@ -282,15 +282,21 @@ class _CategorySelectorState extends State<CategorySelector> {
           children: [
             Text(emoji, style: const TextStyle(fontSize: 22)),
             const SizedBox(height: 2),
-            Text(
-              name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 8,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.2,
-                color: isSelected ? AppColors.darkGreen : AppColors.neutralText,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 8,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.2,
+                    color: isSelected ? AppColors.darkGreen : AppColors.neutralText,
+                  ),
+                ),
               ),
             ),
           ],
@@ -330,20 +336,21 @@ class _CategorySelectorState extends State<CategorySelector> {
             Text(emoji, style: const TextStyle(fontSize: 22)),
             const SizedBox(height: 2),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
-              child: Text(
-                displayLabel,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 8,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
-                  color: isSelected
-                      ? AppColors.darkGreen
-                      : AppColors.neutralText,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  displayLabel,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 8,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.2,
+                    color: isSelected
+                        ? AppColors.darkGreen
+                        : AppColors.neutralText,
+                  ),
                 ),
               ),
             ),

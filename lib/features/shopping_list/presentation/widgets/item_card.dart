@@ -7,7 +7,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../../../core/models/cart_item.dart';
 import '../../../../shared/widgets/badge_chip.dart';
 import '../../../../shared/widgets/price_display.dart';
-import '../../../../shared/widgets/vendor_discount_strip.dart';
+
 
 class ItemCard extends StatelessWidget {
   final CartItem item;
@@ -195,12 +195,6 @@ class ItemCard extends StatelessWidget {
         children: [
           const Divider(height: 1, color: AppColors.dividerGrey),
           const SizedBox(height: AppDimensions.paddingS + 2),
-          if (item.vendorDiscountValue > 0)
-            VendorDiscountStrip(
-              discountText: item.vendorDiscountType == DiscountType.percentage
-                  ? '${item.vendorDiscountValue.toStringAsFixed(0)}%'
-                  : '₹${item.vendorDiscountValue.toStringAsFixed(0)}',
-            ),
           const SizedBox(height: AppDimensions.paddingS + 2),
           Container(
             padding: const EdgeInsets.all(AppDimensions.paddingS + 2),
@@ -239,14 +233,6 @@ class ItemCard extends StatelessWidget {
                     item.discountType == DiscountType.percentage
                         ? '${item.discountValue.toStringAsFixed(0)}%'
                         : '₹${item.discountValue.toStringAsFixed(0)}',
-                  ),
-                if (item.vendorDiscountValue > 0)
-                  _buildDetailRow(
-                    context,
-                    AppStrings.labelVendorOff,
-                    item.vendorDiscountType == DiscountType.percentage
-                        ? '${item.vendorDiscountValue.toStringAsFixed(0)}%'
-                        : '₹${item.vendorDiscountValue.toStringAsFixed(0)}',
                   ),
                 const Divider(
                   height: AppDimensions.paddingL,

@@ -17,7 +17,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final List<Widget> _screens = [
     const CalculatorScreen(),
@@ -76,6 +76,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   Widget _buildBottomNavBar(bool isDark) {
+    final double bottomInset = MediaQuery.of(context).padding.bottom;
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -88,11 +89,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ],
       ),
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).padding.bottom + AppDimensions.paddingS,
-        top: AppDimensions.paddingM + 2,
+        bottom: (bottomInset > 0 ? bottomInset : AppDimensions.paddingS) +
+            AppDimensions.paddingXS,
+        top: AppDimensions.paddingM,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _navItem(Icons.calculate, AppStrings.navCalc, 0, isDark),
           _navItem(Icons.shopping_cart, AppStrings.navList, 1, isDark),
@@ -107,20 +108,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     bool isActive = _selectedIndex == index;
     Color activeColor = AppColors.primaryGreen;
 
-    return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = index),
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 60,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedIndex = index),
+        behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
               color: isActive ? activeColor : AppColors.neutralText,
-              size: 24,
+              size: 22,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
@@ -128,7 +128,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 fontSize: 9,
                 fontWeight: FontWeight.w900,
                 color: isActive ? activeColor : AppColors.neutralText,
-                letterSpacing: 0.5,
+                letterSpacing: 0.4,
               ),
             ),
           ],
