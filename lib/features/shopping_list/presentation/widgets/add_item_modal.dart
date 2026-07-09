@@ -26,25 +26,22 @@ class _AddItemModalState extends State<AddItemModal> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _flatAmountController = TextEditingController();
   final TextEditingController _flatQtyController = TextEditingController(
-    text: '1',
+    text: '',
   );
 
   final TextEditingController _basePriceController = TextEditingController();
   final TextEditingController _baseQtyController = TextEditingController(
-    text: '1',
+    text: '',
   );
   final TextEditingController _boughtQtyController = TextEditingController();
 
   final TextEditingController _discountController = TextEditingController();
-  final TextEditingController _vendorDiscountController =
-      TextEditingController();
 
   PriceMode _priceMode = PriceMode.flatRate;
   String _selectedCategory = '';
   String _selectedBaseUnit = 'kg';
   String _selectedBoughtUnit = 'g';
   DiscountType _itemDiscountType = DiscountType.percentage;
-  DiscountType _vendorDiscountType = DiscountType.flat;
   DateTime _selectedDate = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -93,10 +90,6 @@ class _AddItemModalState extends State<AddItemModal> {
           ? it.discountValue.toString().replaceAll(RegExp(r'\.0$'), '')
           : '';
       _itemDiscountType = it.discountType;
-      _vendorDiscountController.text = it.vendorDiscountValue > 0
-          ? it.vendorDiscountValue.toString().replaceAll(RegExp(r'\.0$'), '')
-          : '';
-      _vendorDiscountType = it.vendorDiscountType;
     }
   }
 
@@ -109,7 +102,6 @@ class _AddItemModalState extends State<AddItemModal> {
     _baseQtyController.dispose();
     _boughtQtyController.dispose();
     _discountController.dispose();
-    _vendorDiscountController.dispose();
     DropdownManager.dismiss();
     super.dispose();
   }
@@ -182,8 +174,8 @@ class _AddItemModalState extends State<AddItemModal> {
       discountType: _itemDiscountType,
       categoryId: _selectedCategory,
       date: _selectedDate,
-      vendorDiscountValue: double.tryParse(_vendorDiscountController.text) ?? 0,
-      vendorDiscountType: _vendorDiscountType,
+      vendorDiscountValue: 0,
+      vendorDiscountType: DiscountType.flat,
       iconCode: widget.editItem?.iconCode ?? 0xe59c,
       marketType: _marketType,
     );
@@ -226,133 +218,124 @@ class _AddItemModalState extends State<AddItemModal> {
   Widget build(BuildContext context) {
     final tempItem = _calculateTempItem();
 
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final double maxHeight = screenHeight * 0.92 - keyboardHeight;
+
     return SafeArea(
       bottom: false,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(AppDimensions.radiusXL),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: maxHeight.clamp(300, screenHeight * 0.92),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(AppDimensions.radiusXL),
+            ),
           ),
-        ),
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: AppDimensions.paddingM),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingL),
-            Text(
-              widget.editItem != null
-                  ? AppStrings.modalEditItem
-                  : AppStrings.modalAddItem,
-              style: TextStyle(
-                fontFamily: 'JetBrainsMono',
-                fontSize: AppDimensions.fontTitleS,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryGreen,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingXL),
-
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.paddingXL,
+          padding: EdgeInsets.only(bottom: keyboardHeight),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: AppDimensions.paddingM),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DatePickerChip(
-                      selectedDate: _selectedDate,
-                      onTap: _selectDate,
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXL),
+              ),
+              const SizedBox(height: AppDimensions.paddingM),
+              Text(
+                widget.editItem != null
+                    ? AppStrings.modalEditItem
+                    : AppStrings.modalAddItem,
+                style: TextStyle(
+                  fontFamily: 'JetBrainsMono',
+                  fontSize: AppDimensions.fontTitleS,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryGreen,
+                ),
+              ),
+              const SizedBox(height: AppDimensions.paddingL),
 
-                    const ModalSectionLabel(label: AppStrings.modalItemName),
-                    _buildTextInput(
-                      _nameController,
-                      AppStrings.modalEnterItemName,
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXL),
-
-                    const ModalSectionLabel(label: AppStrings.modalCategory),
-                    CategorySelector(
-                      selectedCategory: _selectedCategory,
-                      onCategorySelected: (name, emoji) =>
-                          setState(() => _selectedCategory = name),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXL),
-
-                    const ModalSectionLabel(label: AppStrings.modalMarket),
-                    MarketSelector(
-                      marketType: _marketType,
-                      onMarketChanged: (type) =>
-                          setState(() => _marketType = type),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXL),
-
-                    const ModalSectionLabel(label: AppStrings.modalPriceMode),
-                    PriceModeToggle(
-                      priceMode: _priceMode,
-                      onModeChanged: (mode) =>
-                          setState(() => _priceMode = mode),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXL),
-
-                    if (_priceMode == PriceMode.flatRate)
-                      _buildFlatRateFields()
-                    else
-                      _buildPerUnitFields(),
-
-                    if (_isUnitMismatch) _buildUnitMismatchWarning(),
-                    const SizedBox(height: AppDimensions.paddingXL),
-
-                    const ModalSectionLabel(
-                      label: AppStrings.modalItemDiscount,
-                    ),
-                    _buildDiscountInput(),
-                    const SizedBox(height: AppDimensions.paddingXL),
-
-                    _buildItemTotalCard(tempItem),
-                    const SizedBox(height: AppDimensions.paddingM),
-
-                    _buildVendorDiscountRow(),
-                    if (tempItem.vendorDiscountValue > 0) ...[
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: AppDimensions.paddingS,
-                          ),
-                          child: Text(
-                            AppStrings.modalAfterVendorDiscount,
-                            style: TextStyle(
-                              fontSize: AppDimensions.fontXS,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.paddingXL,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DatePickerChip(
+                        selectedDate: _selectedDate,
+                        onTap: _selectDate,
                       ),
-                      _buildFinalTotalCard(tempItem),
-                    ],
+                      const SizedBox(height: AppDimensions.paddingXL),
 
-                    const SizedBox(height: AppDimensions.paddingXXL),
-                    _buildAddButton(),
-                    const SizedBox(height: AppDimensions.paddingXXL),
-                  ],
+                      const ModalSectionLabel(label: AppStrings.modalItemName),
+                      _buildTextInput(
+                        _nameController,
+                        AppStrings.modalEnterItemName,
+                      ),
+                      const SizedBox(height: AppDimensions.paddingXL),
+
+                      const ModalSectionLabel(label: AppStrings.modalCategory),
+                      CategorySelector(
+                        selectedCategory: _selectedCategory,
+                        onCategorySelected: (name, emoji) =>
+                            setState(() => _selectedCategory = name),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingXL),
+
+                      const ModalSectionLabel(label: AppStrings.modalMarket),
+                      MarketSelector(
+                        marketType: _marketType,
+                        onMarketChanged: (type) =>
+                            setState(() => _marketType = type),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingXL),
+
+                      const ModalSectionLabel(label: AppStrings.modalPriceMode),
+                      PriceModeToggle(
+                        priceMode: _priceMode,
+                        onModeChanged: (mode) =>
+                            setState(() => _priceMode = mode),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingXL),
+
+                      if (_priceMode == PriceMode.flatRate)
+                        _buildFlatRateFields()
+                      else
+                        _buildPerUnitFields(),
+
+                      if (_isUnitMismatch) _buildUnitMismatchWarning(),
+                      const SizedBox(height: AppDimensions.paddingXL),
+
+                      const ModalSectionLabel(
+                        label: AppStrings.modalItemDiscount,
+                      ),
+                      _buildDiscountInput(),
+                      const SizedBox(height: AppDimensions.paddingXL),
+
+                      _buildItemTotalCard(tempItem),
+
+                      const SizedBox(height: AppDimensions.paddingXL),
+                      _buildAddButton(),
+                      SizedBox(
+                        height:
+                            MediaQuery.of(context).padding.bottom +
+                            AppDimensions.paddingL,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -534,7 +517,7 @@ class _AddItemModalState extends State<AddItemModal> {
                 ),
                 const SizedBox(width: 8),
                 SizedBox(
-                  width: 55,
+                  width: 70,
                   child: ModalRateInput(
                     controller: _baseQtyController,
                     hint: '1',
@@ -680,71 +663,6 @@ class _AddItemModalState extends State<AddItemModal> {
         AppColors.gradientItemTotalEnd,
       ],
       amountColor: AppColors.primaryGreen,
-    );
-  }
-
-  Widget _buildVendorDiscountRow() {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingM),
-      decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : AppColors.vendorOffBG,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        border: Border.all(
-          color: AppColors.vendorOffBorder,
-          style: BorderStyle.solid,
-        ),
-      ),
-      child: Row(
-        children: [
-          Text(
-            AppStrings.modalVendorOff,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              color: AppColors.vendorOffLabel,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ModalRateInput(
-              controller: _vendorDiscountController,
-              hint: '0',
-              fontSize: 13,
-              onChanged: (_) => setState(() {}),
-            ),
-          ),
-          const SizedBox(width: 8),
-          DiscountTypeToggle(
-            selected: _vendorDiscountType,
-            onSelected: (val) => setState(() => _vendorDiscountType = val),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFinalTotalCard(CartItem item) {
-    String formula = "₹${item.itemFinalPrice.toStringAsFixed(0)}";
-    if (item.vendorDiscountValue > 0) {
-      String discStr = item.vendorDiscountType == DiscountType.percentage
-          ? "${item.vendorDiscountValue.toStringAsFixed(0)}%"
-          : "₹${item.vendorDiscountValue.toStringAsFixed(0)}";
-      formula += " - $discStr Vendor Off";
-    }
-
-    return TotalCard(
-      title: AppStrings.modalFinalItemTotal,
-      formula: formula,
-      amount: item.itemAfterVendorDiscount,
-      gradientColors: const [
-        AppColors.gradientFinalTotalStart,
-        AppColors.gradientFinalTotalEnd,
-      ],
-      amountColor: AppColors.finalTotalValue,
     );
   }
 
