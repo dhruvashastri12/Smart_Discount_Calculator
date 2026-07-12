@@ -16,6 +16,11 @@ void main() {
       dataService.clear();
     });
 
+    Future<void> settle(WidgetTester tester) async {
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+
     testWidgets('Full Add and Delete Item Flow', (WidgetTester tester) async {
       // 0. Set larger surface size to avoid overflow on small test screens
       tester.view.physicalSize = const Size(1024, 2048);
@@ -23,21 +28,17 @@ void main() {
 
       // 1. Launch the app
       await tester.pumpWidget(const MaterialApp(home: MainNavigationScreen()));
-      await tester.pumpAndSettle();
+      await settle(tester);
 
-      // 2. Verify we start on Calculator
+      // 2. Verify we start on Shopping List (since selectedIndex is 1 by default)
       expect(find.text(AppStrings.calcTitle), findsOneWidget);
-
-      // 3. Navigate to Shopping List tab
-      await tester.tap(find.byIcon(Icons.shopping_cart));
-      await tester.pumpAndSettle();
 
       // Verify we are on Shopping List screen (empty state)
       expect(find.text(AppStrings.listEmptyMsg), findsOneWidget);
 
       // 4. Open Add Item Modal
       await tester.tap(find.byIcon(Icons.add));
-      await tester.pumpAndSettle();
+      await settle(tester);
       expect(find.text(AppStrings.modalAddItem), findsOneWidget);
 
       // 5. Fill the form
@@ -48,13 +49,17 @@ void main() {
       // Enter Name (TextField index 0)
       await tester.enterText(find.byType(TextField).at(0), 'Whole Bread');
 
+      // Enter Quantity (TextField index 1)
+      await tester.enterText(find.byType(TextField).at(1), '1');
+
       // Enter Price (TextField index 2 for Flat Amount)
       await tester.enterText(find.byType(TextField).at(2), '60');
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await settle(tester);
 
       // 6. Add Item
       await tester.tap(find.text(AppStrings.modalBtnAdd));
-      await tester.pumpAndSettle(); // Wait for modal to close
+      await settle(tester); // Wait for modal to close
 
       // 7. Verify item is in list
       expect(find.text('Whole Bread'), findsOneWidget);
@@ -63,12 +68,12 @@ void main() {
 
       // 8. Delete the item
       await tester.tap(find.byIcon(Icons.delete_outline));
-      await tester.pumpAndSettle();
+      await settle(tester);
 
       // Confirm delete dialog
       expect(find.text(AppStrings.dialogConfirmDelete), findsOneWidget);
       await tester.tap(find.text(AppStrings.listBtnYesDelete));
-      await tester.pumpAndSettle();
+      await settle(tester);
 
       // 9. Verify list is empty again
       expect(find.text('Whole Bread'), findsNothing);
