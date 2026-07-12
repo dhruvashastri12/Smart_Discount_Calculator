@@ -23,9 +23,9 @@ class ModalRateInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-      "ModalRateInput: build called, padding vertical = ${AppDimensions.paddingM}",
-    );
+    // print(
+    //   "ModalRateInput: build called, padding vertical = ${AppDimensions.paddingM}",
+    // );
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(
