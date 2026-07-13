@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ai_discount_calculator/features/main_navigation/presentation/screens/main_navigation_screen.dart';
-import 'package:ai_discount_calculator/core/services/data_service.dart';
-import 'package:ai_discount_calculator/core/constants/app_strings.dart';
+import 'package:smart_discount_calculator/features/main_navigation/presentation/screens/main_navigation_screen.dart';
+import 'package:smart_discount_calculator/core/services/data_service.dart';
+import 'package:smart_discount_calculator/core/constants/app_strings.dart';
 
 void main() {
   group('End-to-End App Flow Integration Tests', () {

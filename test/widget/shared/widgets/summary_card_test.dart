@@ -1,7 +1,7 @@
 // test/widget/shared/widgets/summary_card_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ai_discount_calculator/shared/widgets/summary_card.dart';
+import 'package:smart_discount_calculator/shared/widgets/summary_card.dart';
 
 void main() {
   testWidgets('SummaryCard should render its children correctly', (WidgetTester tester) async {

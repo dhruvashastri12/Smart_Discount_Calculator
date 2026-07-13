@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:ai_discount_calculator/core/constants/app_colors.dart';
-import 'package:ai_discount_calculator/core/constants/app_dimensions.dart';
-import 'package:ai_discount_calculator/core/constants/app_strings.dart';
+import 'package:smart_discount_calculator/core/constants/app_colors.dart';
+import 'package:smart_discount_calculator/core/constants/app_dimensions.dart';
+import 'package:smart_discount_calculator/core/constants/app_strings.dart';
 
 /// A placeholder screen for the unit conversion feature.
 class ConversionScreen extends StatelessWidget {

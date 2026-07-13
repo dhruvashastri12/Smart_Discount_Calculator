@@ -23,6 +23,8 @@ class CategoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
         Container(
@@ -86,7 +88,7 @@ class CategoryHeader extends StatelessWidget {
             fontFamily: 'JetBrainsMono',
             fontSize: AppDimensions.fontXXL,
             fontWeight: FontWeight.w900,
-            color: AppColors.navBarDark,
+            color: isDark ? Colors.white : AppColors.navBarDark,
           ),
         ),
       ],
