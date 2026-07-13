@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:ai_discount_calculator/features/discount_calculator/presentation/screens/calculator_screen.dart';
-import 'package:ai_discount_calculator/features/shopping_list/presentation/screens/shopping_list_screen.dart';
-import 'package:ai_discount_calculator/features/shopping_list/presentation/screens/history_screen.dart';
-import 'package:ai_discount_calculator/features/shopping_list/presentation/screens/conversion_screen.dart';
-import 'package:ai_discount_calculator/core/constants/app_colors.dart';
-import 'package:ai_discount_calculator/core/constants/app_dimensions.dart';
-import 'package:ai_discount_calculator/core/constants/app_strings.dart';
-import 'package:ai_discount_calculator/main.dart';
+import 'package:smart_discount_calculator/features/discount_calculator/presentation/screens/calculator_screen.dart';
+import 'package:smart_discount_calculator/features/shopping_list/presentation/screens/shopping_list_screen.dart';
+import 'package:smart_discount_calculator/features/shopping_list/presentation/screens/history_screen.dart';
+import 'package:smart_discount_calculator/features/shopping_list/presentation/screens/conversion_screen.dart';
+import 'package:smart_discount_calculator/core/constants/app_colors.dart';
+import 'package:smart_discount_calculator/core/constants/app_dimensions.dart';
+import 'package:smart_discount_calculator/core/constants/app_strings.dart';
+import 'package:smart_discount_calculator/main.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});

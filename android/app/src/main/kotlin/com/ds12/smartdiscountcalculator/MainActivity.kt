@@ -1,4 +1,4 @@
-package com.antigravity.AI_Discount_Calculator
+package com.ds12.smartdiscountcalculator
 
 import io.flutter.embedding.android.FlutterActivity
 

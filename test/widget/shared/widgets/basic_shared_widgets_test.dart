@@ -1,9 +1,9 @@
 // test/widget/shared/widgets/basic_shared_widgets_test.dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ai_discount_calculator/shared/widgets/badge_chip.dart';
-import 'package:ai_discount_calculator/shared/widgets/category_header.dart';
-import 'package:ai_discount_calculator/shared/widgets/savings_strip.dart';
-import 'package:ai_discount_calculator/core/constants/app_strings.dart';
+import 'package:smart_discount_calculator/shared/widgets/badge_chip.dart';
+import 'package:smart_discount_calculator/shared/widgets/category_header.dart';
+import 'package:smart_discount_calculator/shared/widgets/savings_strip.dart';
+import 'package:smart_discount_calculator/core/constants/app_strings.dart';
 import '../../../helpers/test_helpers.dart'; // Corrected path (3 levels up)
 
 void main() {
