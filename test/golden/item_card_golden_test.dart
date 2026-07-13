@@ -1,8 +1,8 @@
 // test/golden/item_card_golden_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ai_discount_calculator/features/shopping_list/presentation/widgets/item_card.dart';
-import 'package:ai_discount_calculator/core/models/cart_item.dart';
+import 'package:smart_discount_calculator/features/shopping_list/presentation/widgets/item_card.dart';
+import 'package:smart_discount_calculator/core/models/cart_item.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {

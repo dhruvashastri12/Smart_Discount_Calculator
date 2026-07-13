@@ -1,9 +1,9 @@
 // test/golden/shared_widgets_golden_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ai_discount_calculator/shared/widgets/badge_chip.dart';
-import 'package:ai_discount_calculator/shared/widgets/savings_strip.dart';
-import 'package:ai_discount_calculator/shared/widgets/category_header.dart';
+import 'package:smart_discount_calculator/shared/widgets/badge_chip.dart';
+import 'package:smart_discount_calculator/shared/widgets/savings_strip.dart';
+import 'package:smart_discount_calculator/shared/widgets/category_header.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {

@@ -1,8 +1,8 @@
 // test/widget/features/shopping_list/widgets/add_item_modal_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ai_discount_calculator/features/shopping_list/presentation/widgets/add_item_modal.dart';
-import 'package:ai_discount_calculator/core/constants/app_strings.dart';
+import 'package:smart_discount_calculator/features/shopping_list/presentation/widgets/add_item_modal.dart';
+import 'package:smart_discount_calculator/core/constants/app_strings.dart';
 import '../../../../helpers/test_helpers.dart'; // Corrected path (4 levels up)
 
 void main() {

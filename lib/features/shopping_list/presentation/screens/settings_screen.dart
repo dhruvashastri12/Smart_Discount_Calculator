@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:ai_discount_calculator/core/constants/app_colors.dart';
-import 'package:ai_discount_calculator/core/constants/app_strings.dart';
-import 'package:ai_discount_calculator/core/constants/app_constants.dart';
-import 'package:ai_discount_calculator/main.dart';
+import 'package:smart_discount_calculator/core/constants/app_colors.dart';
+import 'package:smart_discount_calculator/core/constants/app_strings.dart';
+import 'package:smart_discount_calculator/core/constants/app_constants.dart';
+import 'package:smart_discount_calculator/main.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
