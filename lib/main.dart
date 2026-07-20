@@ -7,6 +7,7 @@ import 'core/constants/app_strings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'firebase_options.dart'; // This is the file the wizard just generated!
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 /// Entry point of the application.
 /// Initializes app services and runs the root widget.
@@ -58,6 +59,11 @@ class AntigravityFirstSyncApp extends StatelessWidget {
 
           // Remove debug banner for a cleaner premium look
           debugShowCheckedModeBanner: false,
+
+          // ADD THIS LINE TO TRACK AUTOMATIC PAGE VIEWS:
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+          ],
         );
       },
     );

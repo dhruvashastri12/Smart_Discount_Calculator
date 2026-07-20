@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -49,6 +50,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void _updateUI() {
     if (mounted) setState(() {});
+  }
+
+  // Logs custom history_item_card_clicked event to Firebase Analytics asynchronously
+  Future<void> _logHistoryCardClick(CartItem item) async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'history_item_card_clicked',
+        parameters: {
+          'item_name': item.itemName,
+          'item_category': item.categoryId,
+          'market_type': item.marketType,
+          'price_mode_type': item.priceMode == PriceMode.flatRate ? 'flat rate' : 'per unit',
+          'item_quantity': item.boughtQty.toInt(),
+          'item_rate': item.enteredAmount,
+          'item_unit': item.boughtUnit,
+          'item_discount': item.discountValue,
+          'original_price': item.itemFinalPrice.toStringAsFixed(2),
+          'paid_amount': item.itemAfterVendorDiscount.toStringAsFixed(2),
+          'total_savings': item.totalSavings.toStringAsFixed(2),
+        },
+      );
+    } catch (e) {
+      // Safe try-catch block to prevent analytics failure from crashing the main UI
+      debugPrint('Error logging history_item_card_clicked event: $e');
+    }
   }
 
   bool _isRoundOffVisible(String categoryId) {
@@ -693,10 +719,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       (it) => ItemCard(
                         item: it,
                         isExpanded: _expandedItemId == it.id,
-                        onToggle: () => setState(
-                          () =>
-                              _expandedItemId = _expandedItemId == it.id ? null : it.id,
-                        ),
+                        onToggle: () {
+                          setState(
+                            () => _expandedItemId = _expandedItemId == it.id ? null : it.id,
+                          );
+                          _logHistoryCardClick(it);
+                        },
                         onEdit: () => _showEditModal(it),
                         onDelete: () => _showDeleteConfirmation(it),
                         showDate: false,

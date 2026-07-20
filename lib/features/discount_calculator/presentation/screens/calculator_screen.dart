@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:smart_discount_calculator/core/constants/app_colors.dart';
 import 'package:smart_discount_calculator/core/constants/app_strings.dart';
@@ -30,6 +31,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   double get payableAmount => (originalPrice - savedAmount).clamp(0, double.infinity);
+
+  // Logs custom calc_discount_calculated event to Firebase Analytics
+  Future<void> _logCalculation() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'calc_discount_calculated',
+        parameters: {
+          'original_price': originalPrice,
+          'discount_amount': savedAmount,
+          'discount_type': isPercent ? 'percent' : 'flat',
+          'final_price': payableAmount,
+        },
+      );
+    } catch (e) {
+      // Safe try-catch block to prevent crashes from analytics failure
+      debugPrint('Error logging calc_discount_calculated event: $e');
+    }
+  }
 
   void _onKeyTap(String key) {
     setState(() {
@@ -68,6 +87,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         }
       }
     });
+    // Log the calculation event asynchronously on key tap
+    _logCalculation();
   }
 
   @override
@@ -179,8 +200,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             decoration: BoxDecoration(color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.neutralChip, borderRadius: BorderRadius.circular(12)),
             child: Row(
               children: [
-                _toggleButton("PERCENT %", isPercent, isDark, () => setState(() => isPercent = true)),
-                _toggleButton("FLAT ₹", !isPercent, isDark, () => setState(() => isPercent = false)),
+                _toggleButton("PERCENT %", isPercent, isDark, () {
+                  setState(() => isPercent = true);
+                  _logCalculation();
+                }),
+                _toggleButton("FLAT ₹", !isPercent, isDark, () {
+                  setState(() => isPercent = false);
+                  _logCalculation();
+                }),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:smart_discount_calculator/core/constants/app_colors.dart';
 import 'package:smart_discount_calculator/core/constants/app_strings.dart';
@@ -82,8 +83,21 @@ class SettingsScreen extends StatelessWidget {
         trailing: Switch(
           value: isDark,
           activeThumbColor: AppColors.primaryList,
-          onChanged: (val) {
+          onChanged: (val) async {
              themeNotifier.value = val ? ThemeMode.dark : ThemeMode.light;
+
+             // Log theme_changed custom event to Firebase Analytics asynchronously
+             try {
+               await FirebaseAnalytics.instance.logEvent(
+                 name: 'theme_changed',
+                 parameters: {
+                   'selected_theme': val ? 'dark' : 'light',
+                 },
+               );
+             } catch (e) {
+               // Safe try-catch block to prevent crash if analytics logging fails
+               debugPrint('Error logging theme_changed event: $e');
+             }
           },
         ),
       ),
