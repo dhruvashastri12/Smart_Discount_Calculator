@@ -342,6 +342,7 @@ class _AddItemModalState extends State<AddItemModal> {
   }
 
   Widget _buildTextInput(TextEditingController controller, String hint) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -352,7 +353,7 @@ class _AddItemModalState extends State<AddItemModal> {
         controller: controller,
         style: TextStyle(
           fontFamily: 'DMSans',
-          color: AppColors.navBarDark,
+          color: isDark ? Colors.white : AppColors.navBarDark,
           fontSize: AppDimensions.fontTitleS,
           fontWeight: FontWeight.w500,
         ),
