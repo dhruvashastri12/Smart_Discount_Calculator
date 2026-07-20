@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import 'package:smart_discount_calculator/features/discount_calculator/presentation/screens/calculator_screen.dart';
@@ -89,7 +90,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ],
       ),
       padding: EdgeInsets.only(
-        bottom: (bottomInset > 0 ? bottomInset : AppDimensions.paddingS) +
+        bottom:
+            (bottomInset > 0 ? bottomInset : AppDimensions.paddingS) +
             AppDimensions.paddingXS,
         top: AppDimensions.paddingM,
       ),
