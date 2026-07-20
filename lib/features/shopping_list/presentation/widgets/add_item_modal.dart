@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
@@ -181,11 +182,33 @@ class _AddItemModalState extends State<AddItemModal> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     if (!_isValid) return;
     final item = _calculateTempItem();
     widget.onItemAdded(item);
+    
+    // Dismiss the modal first to keep UI transitions responsive
     Navigator.pop(context);
+
+    // Log the custom shopping_add_item event to Firebase Analytics asynchronously
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'shopping_add_item',
+        parameters: {
+          'item_name': item.itemName,
+          'item_category': item.categoryId,
+          'market_type': item.marketType,
+          'price_mode_type': item.priceMode == PriceMode.flatRate ? 'flat rate' : 'per unit',
+          'item_quantity': item.boughtQty.toInt(),
+          'item_rate': item.enteredAmount,
+          'item_unit': item.boughtUnit,
+          'item_discount': item.discountValue,
+        },
+      );
+    } catch (e) {
+      // Safe try-catch block to prevent crash on UI thread
+      debugPrint('Error logging shopping_add_item event: $e');
+    }
   }
 
   Future<void> _selectDate() async {

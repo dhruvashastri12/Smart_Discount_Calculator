@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -45,6 +46,31 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
 
   void _updateUI() {
     if (mounted) setState(() {});
+  }
+
+  // Logs custom shopping_item_card_clicked event to Firebase Analytics asynchronously
+  Future<void> _logShoppingCardClick(CartItem item) async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'shopping_item_card_clicked',
+        parameters: {
+          'item_name': item.itemName,
+          'item_category': item.categoryId,
+          'market_type': item.marketType,
+          'price_mode_type': item.priceMode == PriceMode.flatRate ? 'flat rate' : 'per unit',
+          'item_quantity': item.boughtQty.toInt(),
+          'item_rate': item.enteredAmount,
+          'item_unit': item.boughtUnit,
+          'item_discount': item.discountValue,
+          'original_price': item.itemFinalPrice.toStringAsFixed(2),
+          'paid_amount': item.itemAfterVendorDiscount.toStringAsFixed(2),
+          'total_savings': item.totalSavings.toStringAsFixed(2),
+        },
+      );
+    } catch (e) {
+      // Safe try-catch to prevent analytics errors from crashing the main UI
+      debugPrint('Error logging shopping_item_card_clicked event: $e');
+    }
   }
 
   bool _isRoundOffVisible(String categoryId) {
@@ -426,11 +452,14 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
               (item) => ItemCard(
                 item: item,
                 isExpanded: _expandedItemId == item.id,
-                onToggle: () => setState(
-                  () => _expandedItemId = _expandedItemId == item.id
-                      ? null
-                      : item.id,
-                ),
+                onToggle: () {
+                  setState(
+                    () => _expandedItemId = _expandedItemId == item.id
+                        ? null
+                        : item.id,
+                  );
+                  _logShoppingCardClick(item);
+                },
                 onEdit: () => _showAddModal(editItem: item),
                 onDelete: () => _showDeleteConfirmation(item),
                 showDate: false,
