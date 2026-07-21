@@ -12,6 +12,7 @@ import '../../../../shared/widgets/total_card.dart';
 import '../../../../shared/widgets/modal_rate_input.dart';
 import '../../../../shared/widgets/discount_type_toggle.dart';
 import '../../../../shared/widgets/date_picker_chip.dart';
+import 'package:smart_discount_calculator/main.dart';
 
 class AddItemModal extends StatefulWidget {
   final CartItem? editItem;
@@ -186,7 +187,7 @@ class _AddItemModalState extends State<AddItemModal> {
     if (!_isValid) return;
     final item = _calculateTempItem();
     widget.onItemAdded(item);
-    
+
     // Dismiss the modal first to keep UI transitions responsive
     Navigator.pop(context);
 
@@ -198,7 +199,9 @@ class _AddItemModalState extends State<AddItemModal> {
           'item_name': item.itemName,
           'item_category': item.categoryId,
           'market_type': item.marketType,
-          'price_mode_type': item.priceMode == PriceMode.flatRate ? 'flat rate' : 'per unit',
+          'price_mode_type': item.priceMode == PriceMode.flatRate
+              ? 'flat rate'
+              : 'per unit',
           'item_quantity': item.boughtQty.toInt(),
           'item_rate': item.enteredAmount,
           'item_unit': item.boughtUnit,
@@ -241,131 +244,140 @@ class _AddItemModalState extends State<AddItemModal> {
   Widget build(BuildContext context) {
     final tempItem = _calculateTempItem();
 
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final double maxHeight = screenHeight * 0.92 - keyboardHeight;
+    // viewInsets.bottom padding pushes sheet content up smoothly when the
+    // keyboard appears, instead of resizing the sheet and causing a jump.
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.92,
+        minChildSize: 0.5,
+        maxChildSize: 0.92,
+        expand: false,
+        builder: (context, scrollController) {
+          // ClampingScrollPhysics removes rubber-band overscroll stretch.
+          return SingleChildScrollView(
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(AppDimensions.radiusXL),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: AppDimensions.paddingM),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.paddingM),
+                  Text(
+                    widget.editItem != null
+                        ? AppStrings.modalEditItem
+                        : AppStrings.modalAddItem,
+                    style: TextStyle(
+                      fontFamily: 'JetBrainsMono',
+                      fontSize: AppDimensions.fontTitleS,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryGreen,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.paddingL),
 
-    return SafeArea(
-      bottom: false,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: maxHeight.clamp(300, screenHeight * 0.92),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(AppDimensions.radiusXL),
+                  // All form fields in a scrollable column — no Flexible/Expanded wrapper.
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingXL,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DatePickerChip(
+                          selectedDate: _selectedDate,
+                          onTap: _selectDate,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        const ModalSectionLabel(label: AppStrings.modalItemName),
+                        _buildTextInput(
+                          _nameController,
+                          AppStrings.modalEnterItemName,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        const ModalSectionLabel(label: AppStrings.modalCategory),
+                        CategorySelector(
+                          selectedCategory: _selectedCategory,
+                          onCategorySelected: (name, emoji) =>
+                              setState(() => _selectedCategory = name),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        const ModalSectionLabel(label: AppStrings.modalMarket),
+                        MarketSelector(
+                          marketType: _marketType,
+                          onMarketChanged: (type) =>
+                              setState(() => _marketType = type),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        const ModalSectionLabel(label: AppStrings.modalPriceMode),
+                        PriceModeToggle(
+                          priceMode: _priceMode,
+                          onModeChanged: (mode) =>
+                              setState(() => _priceMode = mode),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        if (_priceMode == PriceMode.flatRate)
+                          _buildFlatRateFields()
+                        else
+                          _buildPerUnitFields(),
+
+                        if (_isUnitMismatch) _buildUnitMismatchWarning(),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        // Item Discount field — last input before the Add button.
+                        // With ClampingScrollPhysics + viewInsets padding, the user
+                        // can scroll up to reach this field when the keyboard is open.
+                        const ModalSectionLabel(
+                          label: AppStrings.modalItemDiscount,
+                        ),
+                        _buildDiscountInput(),
+                        const SizedBox(height: AppDimensions.paddingXL),
+
+                        _buildItemTotalCard(tempItem),
+
+                        const SizedBox(height: AppDimensions.paddingXL),
+                        _buildAddButton(),
+                        SizedBox(
+                          height:
+                              MediaQuery.of(context).padding.bottom +
+                              AppDimensions.paddingL,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          padding: EdgeInsets.only(bottom: keyboardHeight),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: AppDimensions.paddingM),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingM),
-              Text(
-                widget.editItem != null
-                    ? AppStrings.modalEditItem
-                    : AppStrings.modalAddItem,
-                style: TextStyle(
-                  fontFamily: 'JetBrainsMono',
-                  fontSize: AppDimensions.fontTitleS,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryGreen,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingL),
-
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingXL,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DatePickerChip(
-                        selectedDate: _selectedDate,
-                        onTap: _selectDate,
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      const ModalSectionLabel(label: AppStrings.modalItemName),
-                      _buildTextInput(
-                        _nameController,
-                        AppStrings.modalEnterItemName,
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      const ModalSectionLabel(label: AppStrings.modalCategory),
-                      CategorySelector(
-                        selectedCategory: _selectedCategory,
-                        onCategorySelected: (name, emoji) =>
-                            setState(() => _selectedCategory = name),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      const ModalSectionLabel(label: AppStrings.modalMarket),
-                      MarketSelector(
-                        marketType: _marketType,
-                        onMarketChanged: (type) =>
-                            setState(() => _marketType = type),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      const ModalSectionLabel(label: AppStrings.modalPriceMode),
-                      PriceModeToggle(
-                        priceMode: _priceMode,
-                        onModeChanged: (mode) =>
-                            setState(() => _priceMode = mode),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      if (_priceMode == PriceMode.flatRate)
-                        _buildFlatRateFields()
-                      else
-                        _buildPerUnitFields(),
-
-                      if (_isUnitMismatch) _buildUnitMismatchWarning(),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      const ModalSectionLabel(
-                        label: AppStrings.modalItemDiscount,
-                      ),
-                      _buildDiscountInput(),
-                      const SizedBox(height: AppDimensions.paddingXL),
-
-                      _buildItemTotalCard(tempItem),
-
-                      const SizedBox(height: AppDimensions.paddingXL),
-                      _buildAddButton(),
-                      SizedBox(
-                        height:
-                            MediaQuery.of(context).padding.bottom +
-                            AppDimensions.paddingL,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
   Widget _buildTextInput(TextEditingController controller, String hint) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    bool isDark = Theme.of(context).brightness == Brightness.dark || themeNotifier.value == ThemeMode.dark;
     return Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
