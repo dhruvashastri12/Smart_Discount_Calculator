@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import 'package:smart_discount_calculator/features/discount_calculator/presentation/screens/calculator_screen.dart';

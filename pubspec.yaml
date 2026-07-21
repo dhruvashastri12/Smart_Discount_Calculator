@@ -1,7 +1,12 @@
 name: smart_discount_calculator
 description: "Smart Discount Calculator Project."
 publish_to: 'none'
-version: 1.0.1+2
+
+# Rule:
+# 1.0.2 = versionName (visible to users on the Play Store).
+# +3 = versionCode (internal integer Google Play uses to track upgrades—must be higher than the last upload).
+
+version: 1.0.2+3
 
 environment:
   sdk: ^3.11.1
